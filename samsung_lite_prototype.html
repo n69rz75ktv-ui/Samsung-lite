@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#080b12">
+<title>Samsung Lite — Prototype 1.1</title>
+<style>
+:root{--bg:#080b12;--panel:#121a28;--panel2:#1a2638;--blue:#69aaff;--muted:#9aabc2;--white:#f5f8ff}
+*{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--white);font:16px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.app{max-width:1180px;margin:auto;padding:28px clamp(16px,4vw,52px) 36px}
+header{display:flex;justify-content:space-between;align-items:center;margin-bottom:26px}
+.brand{display:flex;gap:12px;align-items:center;font-weight:700;letter-spacing:.02em}.logo{width:38px;height:38px;border-radius:12px;background:#1b3558;display:grid;place-items:center;color:var(--blue);font-size:21px}
+.clock{color:var(--muted);font-variant-numeric:tabular-nums}
+nav{display:flex;gap:10px;margin-bottom:22px}.navbtn,.quickbtn{border:1px solid transparent;background:transparent;color:var(--muted);padding:10px 15px;border-radius:12px;cursor:pointer;font:inherit}
+.navbtn.active,.navbtn:focus-visible,.quickbtn:focus-visible{background:#172944;border-color:#315786;color:#fff;outline:2px solid var(--blue);outline-offset:2px}
+.hero{min-height:260px;border-radius:24px;padding:clamp(22px,4vw,42px);display:flex;align-items:end;position:relative;overflow:hidden;background:radial-gradient(ellipse at 78% 25%,#315b8c 0%,#1b3557 28%,#101b2d 62%,#0e1521 100%);margin-bottom:30px}
+.hero:after{content:"";position:absolute;width:360px;height:360px;border-radius:50%;right:8%;top:-35%;background:linear-gradient(135deg,rgba(112,174,255,.28),rgba(15,30,52,.02));filter:blur(2px)}
+.hero-content{position:relative;z-index:1;max-width:570px}.eyebrow{color:#9cc8ff;text-transform:uppercase;letter-spacing:.15em;font-size:11px;font-weight:700}
+h1{font-size:clamp(30px,5vw,54px);line-height:1.05;margin:12px 0}.hero p{color:#c3d2e6;margin:0 0 20px}.primary{background:#eaf3ff;color:#0b1728;border:0;border-radius:999px;padding:11px 19px;font-weight:700;cursor:pointer}
+.sectionhead{display:flex;justify-content:space-between;align-items:center;margin:0 0 14px}.sectionhead h2{font-size:14px;letter-spacing:.12em;margin:0}.sectionhead span{font-size:12px;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px}
+.tile{background:#131b28;border:1px solid #202c3d;border-radius:18px;padding:13px 10px 12px;color:#fff;text-align:center;cursor:pointer;transition:transform .13s ease,border-color .13s ease,background .13s ease;min-width:0}
+.tile:hover{transform:translateY(-2px)}.tile.selected{border:2px solid var(--blue);padding:12px 9px 11px;background:#1a2a40;box-shadow:0 0 0 3px rgba(105,170,255,.10)}
+.tile:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
+.appicon{height:70px;border-radius:13px;display:grid;place-items:center;font-weight:800;font-size:28px;margin-bottom:10px;letter-spacing:-.04em}
+.tile small{font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+.info{margin-top:16px;padding:14px 16px;background:#111b2a;border:1px solid #263b57;border-radius:15px;color:#c4d5eb;display:none}
+.info.show{display:block}.info strong{color:#fff}
+.quick{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px;padding-top:18px;border-top:1px solid #202b3b}
+.quickbtn{background:#121a28;border-color:#202b3b}.quickbtn.active{color:#fff;border-color:var(--blue);background:#172944}
+.panel{display:none;margin-top:16px;background:#111b2a;border:1px solid #263b57;padding:18px;border-radius:16px}.panel.show{display:block}
+.settingrow{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #253247;color:#dce8f8}.settingrow:last-child{border:0}
+.switch{accent-color:var(--blue);width:18px;height:18px}
+footer{color:#65758c;text-align:center;font-size:11px;letter-spacing:.12em;margin-top:28px}
+.toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,20px);opacity:0;background:#eaf3ff;color:#0b1728;padding:11px 17px;border-radius:99px;font-size:13px;transition:.2s;pointer-events:none}.toast.show{opacity:1;transform:translate(-50%,0)}
+@media(max-width:760px){.grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.app{padding:18px 14px 28px}.hero{min-height:220px}.appicon{height:58px}}
+@media(max-width:380px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div class="app">
+<header><div class="brand"><div class="logo">S</div><span>SAMSUNG LITE</span></div><div class="clock" id="clock">--:--</div></header>
+<nav aria-label="Päänavigointi">
+<button class="navbtn active" data-page="home">⌂ &nbsp;Koti</button>
+<button class="navbtn" data-page="apps">▦ &nbsp;Sovellukset</button>
+<button class="navbtn" data-page="settings">⚙ &nbsp;Asetukset</button>
+</nav>
+<main>
+<section class="hero">
+<div class="hero-content"><div class="eyebrow">Samsung Lite · tervetuloa</div><h1>Viihde alkaa tästä.</h1><p>Kaikki suosikkisi yhdessä paikassa. Selkeä näkymä, ilman turhaa hälyä.</p><button class="primary" id="heroAction">Avaa valitut sovellukset</button></div>
+</section>
+<div class="sectionhead"><h2>SUOSIKKISOVELLUKSET</h2><span>11 vaihtoehtoa</span></div>
+<section class="grid" id="grid" aria-label="Sovellukset"></section>
+<div class="info" id="info" aria-live="polite"><strong id="selectedName"></strong><div id="selectedDesc">Valitse sovellus.</div></div>
+<div class="quick">
+<button class="quickbtn" data-panel="picture">▣ &nbsp;Kuva</button>
+<button class="quickbtn" data-panel="sound">♫ &nbsp;Ääni</button>
+<button class="quickbtn" data-panel="network">⌁ &nbsp;Verkko</button>
+<button class="quickbtn" data-panel="system">⚙ &nbsp;Järjestelmä</button>
+</div>
+<section class="panel" id="panel" aria-live="polite"><strong id="panelTitle">Pikavalikko</strong><div id="panelBody"></div></section>
+</main>
+<footer>PROTOTYPE 1.2 · APPLE-INSPIRED · LIGHTWEIGHT UI</footer>
+</div><div class="toast" id="toast"></div>
+<script>
+const apps=[
+{name:"Live TV",symbol:"TV",color:"#2459d5"},{name:"Sovelluskauppa",symbol:"＋",color:"#315b8c"},
+{name:"Netflix",symbol:"N",color:"#e50914"},{name:"YouTube",symbol:"▶",color:"#d92323"},
+{name:"Disney+",symbol:"D+",color:"#173a91"},{name:"Prime Video",symbol:"prime",color:"#176a9e"},
+{name:"Spotify",symbol:"≋",color:"#16834b"},{name:"Yle Areena",symbol:"Y",color:"#3974d8"},
+{name:"Ruutu",symbol:"R",color:"#d99b27"},{name:"MTV Katsomo",symbol:"MTV",color:"#7544b8"},
+{name:"Viaplay",symbol:"V",color:"#2459d5"}];
+let selected=0;
+const grid=document.querySelector('#grid'),info=document.querySelector('#info');
+apps.forEach((a,i)=>{const b=document.createElement('button');b.className='tile'+(i===0?' selected':'');b.type='button';b.innerHTML=`<div class="appicon" style="background:${a.color}">${a.symbol}</div><small>${a.name}</small>`;b.addEventListener('click',()=>selectApp(i));b.addEventListener('focus',()=>selectApp(i));grid.appendChild(b)});
+function selectApp(i){selected=i;[...grid.children].forEach((el,j)=>el.classList.toggle('selected',j===i));document.querySelector('#selectedName').textContent=apps[i].name;document.querySelector('#selectedDesc').textContent='Valittu kohde. Live TV:n ja sovelluskaupan oikeat toiminnot liitetään myöhemmin Tizen-yhteensopivaan toteutukseen.';info.classList.add('show')}
+function toast(t){const el=document.querySelector('#toast');el.textContent=t;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2200)}
+document.querySelector('#heroAction').onclick=()=>toast('Valitse sovellus ruudukosta.');
+// Näiden kohteiden oikeat TV-toiminnot vaativat myöhemmin Samsung Tizen -integraation.
+
+document.querySelectorAll('.navbtn').forEach(b=>b.onclick=()=>{document.querySelectorAll('.navbtn').forEach(x=>x.classList.toggle('active',x===b));if(b.dataset.page==='settings')openPanel('system');else{document.querySelector('#panel').classList.remove('show');toast(b.dataset.page==='apps'?'Sovellukset näkyvät alla.':'Kotinäkymä')}})
+const panels={picture:['Kuva','<div class="settingrow">Kuvatila <span>Elokuva (esikatselu)</span></div><div class="settingrow">Liikkeenpehmennys <span>Pois</span></div>'],sound:['Ääni','<div class="settingrow">Äänitila <span>Vakio</span></div><div class="settingrow">Äänenvoimakkuuden tasaus <span>Päällä</span></div>'],network:['Verkko','<div class="settingrow">Yhteyden tila <span>Tarkista TV:n asetuksista</span></div>'],system:['Järjestelmä','<div class="settingrow">Käyttöliittymän animaatiot <span>Vähäiset</span></div><div class="settingrow">Automaattiset esikatselut <span>Pois</span></div><div class="settingrow">Tietoja <span>Samsung Lite 1.2</span></div>']};
+function openPanel(k){const [title,body]=panels[k];document.querySelector('#panelTitle').textContent=title;document.querySelector('#panelBody').innerHTML=body;document.querySelector('#panel').classList.add('show');document.querySelectorAll('.quickbtn').forEach(b=>b.classList.toggle('active',b.dataset.panel===k))}
+document.querySelectorAll('.quickbtn').forEach(b=>b.onclick=()=>openPanel(b.dataset.panel));
+function tick(){document.querySelector('#clock').textContent=new Intl.DateTimeFormat('fi-FI',{hour:'2-digit',minute:'2-digit'}).format(new Date())}tick();setInterval(tick,30000);
+document.addEventListener('keydown',e=>{if(['ArrowRight','ArrowLeft','ArrowDown','ArrowUp'].includes(e.key)){const n=selected+(e.key==='ArrowRight'?1:e.key==='ArrowLeft'?-1:e.key==='ArrowDown'?3:-3);if(n>=0&&n<apps.length){e.preventDefault();grid.children[n].focus()}}if(e.key==='Enter'&&document.activeElement.classList.contains('tile'))document.activeElement.click()});
+</script>
+</body></html>
